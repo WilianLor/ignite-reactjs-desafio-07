@@ -1,9 +1,11 @@
+import { memo } from "react";
+import { Header } from "./Header";
 import { MovieCard } from "./MovieCard";
 
 interface ContentProps {
   selectedGenre: {
     id: number;
-    name: 'action' | 'comedy' | 'documentary' | 'drama' | 'horror' | 'family';
+    name: "action" | "comedy" | "documentary" | "drama" | "horror" | "family";
     title: string;
   };
 
@@ -19,20 +21,31 @@ interface ContentProps {
   }>;
 }
 
-export function Content({ selectedGenre, movies }: ContentProps) {
+function ContentComponent({ selectedGenre, movies }: ContentProps) {
   return (
     <div className="container">
-      <header>
-        <span className="category">Categoria:<span> {selectedGenre.title}</span></span>
-      </header>
+      <Header title={selectedGenre.title} />
 
       <main>
         <div className="movies-list">
-          {movies.map(movie => (
-            <MovieCard key={movie.imdbID} title={movie.Title} poster={movie.Poster} runtime={movie.Runtime} rating={movie.Ratings[0].Value} />
+          {movies.map((movie) => (
+            <MovieCard
+              key={movie.imdbID}
+              id={movie.imdbID}
+              title={movie.Title}
+              poster={movie.Poster}
+              runtime={movie.Runtime}
+              rating={movie.Ratings[0].Value}
+            />
           ))}
         </div>
       </main>
     </div>
-  )
+  );
 }
+
+export const Content = memo(
+  ContentComponent,
+  (prevProps, nextProps) =>
+    prevProps.selectedGenre.id === nextProps.selectedGenre.id
+);
